@@ -4,16 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Does-animateWithDuration-block-main-thread | Hexo</title>
+    <title>Reload-data-of-UITableView-in-background | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="frankxzx">
     
     <meta name="description" content="stackoverflow
-
-有两个按钮分别触发两个动画,当我按下按钮A，所触发的动画还未结束时，按钮A无法被再次触发，是否是主线程被阻塞了？
-
-代码如下：12345678// 版本一-(IBAction)fadeUsingBlock &amp;#123;NSLog(@&amp;quot;V1: Clicked .">
+UITableView 中有三个独立的 Section, 分别调用三个api，获取数据， 并且刷新tableView我需要当三个请求都毁掉完成的时候，再 reloadData
+123456789101112131415161718192021222324252627282">
     
     
     
@@ -69,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/02/28/Does-animateWithDuration-block-main-thread/" title="Does-animateWithDuration-block-main-thread" itemprop="url">Does-animateWithDuration-block-main-thread</a>
+      <a href="/2017/03/01/Reload-data-of-UITableView-in-background/" title="Reload-data-of-UITableView-in-background" itemprop="url">Reload-data-of-UITableView-in-background</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="frankxzx">frankxzx</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-02-28T09:12:42.000Z" itemprop="datePublished">2017-02-28</time>
-    Updated:<time datetime="2017-02-28T13:59:31.000Z" itemprop="dateModified">2017-02-28</time>
+    <time datetime="2017-03-01T04:43:29.000Z" itemprop="datePublished">2017-03-01</time>
+    Updated:<time datetime="2017-03-01T05:00:39.000Z" itemprop="dateModified">2017-03-01</time>
     
   </p>
 </header>
@@ -86,18 +84,14 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码如下："><span class="toc-number">1.</span> <span class="toc-text">代码如下：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最佳答案"><span class="toc-number">2.</span> <span class="toc-text">最佳答案</span></a></li></ol>
+		
 		</div>
 		
-		<p><a href="http://t.cn/aWYpHa" target="_blank" rel="external">stackoverflow</a></p>
-<blockquote>
-<p>有两个按钮分别触发两个动画,当我按下按钮A，所触发的动画还未结束时，按钮A无法被再次触发，是否是主线程被阻塞了？</p>
-</blockquote>
-<h4 id="代码如下："><a href="#代码如下：" class="headerlink" title="代码如下："></a>代码如下：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 版本一</div><div class="line">-(IBAction)fadeUsingBlock &#123;</div><div class="line">NSLog(@&quot;V1: Clicked ...&quot;);</div><div class="line">[myLabel setAlpha:1.0];</div><div class="line">[UIView animateWithDuration:1.5 animations:^&#123;</div><div class="line">[myLabel setAlpha:0.0];</div><div class="line">&#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>版本二没有类似的情况, 简单的重置计时器开始. 本应该同样的效果, 有什么错的地方？</p>
-<p>// 版本二<br>-(IBAction)fadeUsingOld {<br>NSLog(@”V2: Clicked …”);<br>[myLabel setAlpha:1.0];<br>[UIView beginAnimations:nil context:nil];<br>[UIView setAnimationDuration:1.5];<br>[myLabel setAlpha:0.0];<br>[UIView commitAnimations];<br>}</p>
-<h4 id="最佳答案"><a href="#最佳答案" class="headerlink" title="最佳答案"></a>最佳答案</h4><p>animateWithDuration:animations: block 并不会阻塞主线程. 你遇到的这种情况, 是因为在默认情况下<br>在执行新的 animation block 时，交互（响应事件）是被禁止的，<br>解决方法，你可以重写 passing UIViewAnimationOptionAllowUserInteraction (calling animationWithDuration:delay:options:animations:completion)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">-(IBAction) fadeUsingBlock &#123;</div><div class="line">NSLog(@&quot;V1: Clicked ...&quot;);</div><div class="line">[myLabel setAlpha:1.0];</div><div class="line">[UIView animateWithDuration:1.5 </div><div class="line">delay:0</div><div class="line">options:UIViewAnimationOptionAllowUserInteraction</div><div class="line">animations:^&#123;</div><div class="line">[myLabel setAlpha:0.0];</div><div class="line">&#125;</div><div class="line">completion:nil];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+		<p><a href="http://stackoverflow.com/questions/17348132/reload-data-of-uitableview-in-background" target="_blank" rel="external">stackoverflow</a></p>
+<p>UITableView 中有三个独立的 Section, 分别调用三个api，获取数据， 并且刷新tableView<br>我需要当三个请求都毁掉完成的时候，再 reloadData</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">-(void)viewDidLoad</div><div class="line">&#123;</div><div class="line">//some settings</div><div class="line"></div><div class="line">[NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(reloadDatas) userInfo:nil repeats:YES];</div><div class="line"></div><div class="line">dispatch_queue_t queue = dispatch_get_main_queue();</div><div class="line">dispatch_async(queue, ^&#123;</div><div class="line">[self reloadDatas];</div><div class="line">&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">-(void)reloadDatas</div><div class="line">&#123;</div><div class="line">dispatch_queue_t concurrentQueue = dispatch_get_main_queue();</div><div class="line">dispatch_async(concurrentQueue, ^&#123;</div><div class="line">[self f1];</div><div class="line">[self f2];</div><div class="line">[self f3];</div><div class="line">[myDisplayedTable reloadData];</div><div class="line">&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">-(void)f1</div><div class="line">&#123;</div><div class="line">//load datas with a url request and update array1</div><div class="line">&#125;</div><div class="line">-(void)f2</div><div class="line">&#123;</div><div class="line">//load datas with a url request and update array2</div><div class="line">&#125;</div><div class="line">-(void)f3</div><div class="line">&#123;</div><div class="line">//load datas with a url request and update array3</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>后台线程就是主线程， 你可以使用一个全局队列并且指定优先级来开启一个新的线程,</p>
+<p>解决方法如下：<br>开始一个异步的请求，在回调中跟新数组, 并且跟新指定的section. 这样三个请求就能够同时并发，并且刷新 tableView 中必要的本位, 或者如果你希望 『三次请求 一次刷新』使用后台线程变量来代替并发队列的变量， 并且在主线程刷新</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -112,7 +106,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2017/02/28/Does-animateWithDuration-block-main-thread/" data-title="Does-animateWithDuration-block-main-thread | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2017/03/01/Reload-data-of-UITableView-in-background/" data-title="Reload-data-of-UITableView-in-background | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -122,18 +116,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2017/03/01/如何自定义TouchBar/" title="如何自定义TouchBar">
+ <a href="/2017/03/02/BezierPath-CAlayer-Render/" title="BezierPath-CAlayer-Render">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  如何自定义TouchBar</span>
+  BezierPath-CAlayer-Render</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2017/02/28/UIGraphicsGetCurrentContext,UIGraphicsBeginImageContext之间的联系和区别/"  title="UIGraphicsGetCurrentContext,UIGraphicsBeginImageContext之间的联系和区别">
+<a href="/2017/03/01/如何自定义TouchBar/"  title="如何自定义TouchBar">
  <strong>NEXT:</strong><br/> 
- <span>UIGraphicsGetCurrentContext,UIGraphicsBeginImageContext之间的联系和区别
+ <span>如何自定义TouchBar
 </span>
 </a>
 </div>
@@ -146,7 +140,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码如下："><span class="toc-number">1.</span> <span class="toc-text">代码如下：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最佳答案"><span class="toc-number">2.</span> <span class="toc-text">最佳答案</span></a></li></ol>
+  
   </div>
 
 <div id="asidepart">
